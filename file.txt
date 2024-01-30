@@ -1,0 +1,1 @@
+This is trying to write in file Hello, This is Ayushi. Trying to learn Node ks. Its my Day 1;
