@@ -34,12 +34,17 @@ function processOrder(order){
 
 //To avoid chaing of promises, we can use Async Await
 
-async function ServeOrder(){
-    let orderPlaced = await placeOrder('coffee');
-    console.log(orderPlaced);
-    let processedOrder = await processOrder(orderPlaced);
-    console.log(processedOrder);
+async function ServeOrder(order){
+    try{
+        let orderPlaced = await placeOrder(order);
+        console.log(orderPlaced);
+        let processedOrder = await processOrder(orderPlaced);
+        console.log(processedOrder);
+    }catch(err){
+        console.log(err);
+    }
 
 }
 
-ServeOrder();
+ServeOrder('coffee');
+ServeOrder('Soup');
