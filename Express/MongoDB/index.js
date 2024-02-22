@@ -9,11 +9,21 @@ mongoose.connect('mongodb://127.0.0.1:27017/test')
 //Schema
 
 const courseSchema = new mongoose.Schema({
-    name : String,
-    creator: String,
+    name : {type: String, required: true, minLength : 5, maxLength: 500},
+    creator: {type: String, required: true},
+    category:{
+        type: String,
+        required: true,
+        enum: ['Web', 'DSA','DB', 'Backend' ,'OOPS']
+    },
+    tags: {type: Array, validate:{
+        validator: function(tags){
+            return tags.length >= 1
+        }
+    }},
     publishedDate : { type: Date , default: Date.now()},
-    isPublished: Boolean,
-    rating: Number
+    isPublished: {type: Boolean, required: true},
+    rating: {type: Number, required: function(){ return this.isPublished}}
 });
 
 // models  In oops we have class and object car is class - Ausi is object 
@@ -24,19 +34,30 @@ const Course = mongoose.model('Course', courseSchema);
 
 
 const  createCourse = async () => {
+    try{
     const course = new Course({
-        name : 'OOPS',
+        name : 'OOPSS',
         creator: 'Niray',
-        isPublished: true,
-        rating: 4.7
+        isPublished: false,
+        category: 'Web',
+        tags: ['Java']
+        
     });
     
+   // await course.validate()
     const result = await course.save();
+
     
     console.log(result);
 }
+catch(err){
+   for(field in err.errors){
+    console.log(err.errors[field]);
+   }
+}
+}
 
-// createCourse();
+createCourse();
 
 const getCourses = async()=>{
 
@@ -106,4 +127,4 @@ const deleteCourse = async(id)=>{
     console.log('Course is Removed', course);
 }
 
-deleteCourse('65d75ea999997ee4745aa1d7')
+// deleteCourse('65d75ea999997ee4745aa1d7')
